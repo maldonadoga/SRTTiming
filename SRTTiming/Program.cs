@@ -23,6 +23,7 @@ namespace SRTTiming
                 srtFile myFile = new srtFile();
                 myFile.FilePath = srtPath;
                 myFile.TmpFilePath = srtPath + ".tmp";
+                myFile.BakFilePath = srtPath + ".bak";
                 myFile.Seconds = dSec;
                 myFile.AddSeconds();
             }
@@ -48,12 +49,19 @@ namespace SRTTiming
     {
         public string FilePath { get; set; }
         public string TmpFilePath { get; set; }
+        public string BakFilePath { get; set; }
         public decimal Seconds { get; set; }
 
         public void AddSeconds()
         {
+            if (File.Exists(this.TmpFilePath))
+                File.Delete(this.TmpFilePath);
+
+            if (File.Exists(this.BakFilePath))
+                File.Delete(this.BakFilePath);
+
             StreamReader mySR = new StreamReader(this.FilePath, Encoding.GetEncoding("iso-8859-1"));
-            StreamWriter mySW = new StreamWriter(this.TmpFilePath);
+            StreamWriter mySW = new StreamWriter(this.TmpFilePath, false, Encoding.GetEncoding("iso-8859-1"));
 
             string line = "";
             while (line != null)

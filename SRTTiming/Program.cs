@@ -45,6 +45,7 @@ namespace SRTTiming
             }
         }
     }
+
     class srtFile
     {
         public string FilePath { get; set; }
@@ -115,7 +116,7 @@ namespace SRTTiming
 
         private void renameFiles()
         {
-            File.Move(this.FilePath, this.FilePath + ".bak");
+            File.Move(this.FilePath, this.BakFilePath);
             File.Move(this.TmpFilePath, this.FilePath);
         }
     }

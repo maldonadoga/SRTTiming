@@ -11,24 +11,34 @@ namespace SRTTiming
     {
         static void Main(string[] args)
         {
-            string srtPath = getPath();
-
-            if (srtPath != null)
-            {
-            Console.WriteLine("Seconds (##.###):");
-            string sSec = Console.ReadLine();
+            string srtPath = null;
+            string sSec = null;
             decimal dSec;
-            if (decimal.TryParse(sSec, out dSec))
-            {
-                srtFile myFile = new srtFile();
-                myFile.FilePath = srtPath;
-                myFile.TmpFilePath = srtPath + ".tmp";
-                myFile.BakFilePath = srtPath + ".bak";
-                myFile.Seconds = dSec;
-                myFile.AddSeconds();
-            }
+
+            if (args.Length > 0)
+                srtPath = args[0];
             else
-                Console.WriteLine("Seconds is not in the right format...");
+                srtPath = getPath();
+
+            if (validatePath(srtPath))
+            {
+                if (args.Length > 1)
+                    sSec = args[1];
+                else
+                    sSec = getSeconds();
+                
+                if (decimal.TryParse(sSec, out dSec))
+                {
+                    srtFile myFile = new srtFile();
+                    myFile.FilePath = srtPath;
+                    myFile.TmpFilePath = srtPath + ".tmp";
+                    myFile.BakFilePath = srtPath + ".bak";
+                    myFile.Seconds = dSec;
+                    myFile.AddSeconds();
+                    myFile = null;
+                }
+                else
+                    Console.WriteLine("Seconds is not in the right format...");
             }
         }
 
@@ -36,13 +46,25 @@ namespace SRTTiming
         {
             Console.WriteLine("Full file path:");
             string srtpath = Console.ReadLine();
+            return srtpath;
+        }
+
+        private static bool validatePath(string srtpath)
+        {
             if (File.Exists(srtpath))
-                return srtpath;
+                return true;
             else
             {
-                Console.WriteLine("Can not access file specified...");
-                return null;
+                Console.WriteLine("Can not access the file specified...");
+                return false;
             }
+        }
+
+        private static string getSeconds()
+        {
+            Console.WriteLine("Seconds (##.###):");
+            string ssec = Console.ReadLine();
+            return ssec;
         }
     }
 
